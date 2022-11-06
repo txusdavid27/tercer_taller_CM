@@ -193,6 +193,9 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
                     if(accesoGPS){
                         binding.botonRegistrar.setEnabled(true);
                         binding.botonRegistrar.setTextColor(Color.parseColor("#000000"));
+                        /*
+                        EVALUAR QUE TODOS LOS CAMPOS ESTÉN LLENOS.
+                         */
                     }else{
                         Toast.makeText(getApplicationContext(), "ACTIVAR UBICACIÓN PARA REGISTRO", Toast.LENGTH_LONG).show();
                     }

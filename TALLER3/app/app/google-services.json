@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "785004348741",
+    "project_id": "trasla-b2037",
+    "storage_bucket": "trasla-b2037.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:785004348741:android:70bfe71d336c5e11112a2c",
+        "android_client_info": {
+          "package_name": "ponti.edu.trasla"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "785004348741-grmun02pobb6osi6h5q1r88tccgs8aq8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvkSgMdc2o-Jw0iGJly-CroWwuKG6Qhe8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "785004348741-grmun02pobb6osi6h5q1r88tccgs8aq8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
