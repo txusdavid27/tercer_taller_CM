@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void updateUI(FirebaseUser currentUser){
         if(currentUser!=null){
-            Intent intent = new Intent(getBaseContext(), BorrarActivity.class);
+            Intent intent = new Intent(getBaseContext(), GoogleMapsActivity.class);
             intent.putExtra("user", currentUser.getEmail());
             startActivity(intent);
         } else {
@@ -111,7 +111,11 @@ public class MainActivity extends AppCompatActivity {
             binding.inputUsername.setError("Required.");
             valid = false;
         } else {
-            binding.inputUsername.setError(null);
+            if(isEmailValid(binding.inputUsername.getText().toString())){
+                binding.inputUsername.setError(null);
+            }else{
+                binding.inputUsername.setError("Dirección Erronea.");
+            }
         }
         String password = binding.inputPassword.getText().toString();
         if (TextUtils.isEmpty(password)) {
@@ -149,6 +153,15 @@ public class MainActivity extends AppCompatActivity {
                     });
         }
     }
+
+    private boolean isEmailValid(String email) {
+        if (!email.contains("@") ||
+                !email.contains(".") ||
+                email.length() < 5)
+            return false;
+        return true;
+    }
+
 
 
 }
