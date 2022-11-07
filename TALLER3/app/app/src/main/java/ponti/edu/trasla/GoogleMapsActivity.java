@@ -1,8 +1,14 @@
 package ponti.edu.trasla;
 
-import androidx.fragment.app.FragmentActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -10,13 +16,44 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 
 import ponti.edu.trasla.databinding.ActivityGoogleMapsBinding;
 
-public class GoogleMapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class GoogleMapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    /*
+    ACTIVAR FUNCIONES DE LOS BOTONES DEL MENU.
+    TERMINAR LOS ESTILOS DEL XML DEL MENU
+    https://www.youtube.com/watch?v=EZ-sNN7UWFU
+    minuto 14.
+     */
 
     private GoogleMap mMap;
     private ActivityGoogleMapsBinding binding;
+    private FirebaseAuth mAuth;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.opmenu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int itemClicked = item.getItemId();
+        if(itemClicked == R.id.menuLogOut){
+            mAuth.signOut();
+            Intent intent = new Intent(GoogleMapsActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }else if (itemClicked == R.id.menuState){
+//Abrir actividad para mostrarse activo etc.
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,10 +62,15 @@ public class GoogleMapsActivity extends FragmentActivity implements OnMapReadyCa
         binding = ActivityGoogleMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        Toolbar mt = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mt);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
     }
 
     /**

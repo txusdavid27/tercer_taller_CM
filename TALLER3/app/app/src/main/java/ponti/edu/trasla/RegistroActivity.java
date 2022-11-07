@@ -46,6 +46,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONException;
 
@@ -62,6 +63,7 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
 
     /*Binding*/
     ActivityRegistroBinding binding;
+    private FirebaseAuth mAuth;
 
     /*LOCATION*/
     private static final int ACCESS_LOCATION_ID = 1;
@@ -89,6 +91,7 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
+        mAuth = FirebaseAuth.getInstance();
 
         binding.botonRegistrar.setEnabled(false);
 

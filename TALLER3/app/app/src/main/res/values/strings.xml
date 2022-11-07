@@ -19,4 +19,6 @@
     <string name="camara">Camara</string>
     <string name="galer_a">Galería</string>
     <string name="title_activity_google_maps">GoogleMapsActivity</string>
+    <string name="menu_sesi_n">Menu Sesión</string>
+    <string name="mostrarse_activo">Mostrarse Activo</string>
 </resources>
