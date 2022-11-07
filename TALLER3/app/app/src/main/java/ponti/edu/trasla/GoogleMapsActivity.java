@@ -24,10 +24,7 @@ public class GoogleMapsActivity extends AppCompatActivity implements OnMapReadyC
 
     /*
     ACTIVAR FUNCIONES DE LOS BOTONES DEL MENU.
-    TERMINAR LOS ESTILOS DEL XML DEL MENU
-    https://www.youtube.com/watch?v=EZ-sNN7UWFU
-    minuto 14.
-     */
+       */
 
     private GoogleMap mMap;
     private ActivityGoogleMapsBinding binding;

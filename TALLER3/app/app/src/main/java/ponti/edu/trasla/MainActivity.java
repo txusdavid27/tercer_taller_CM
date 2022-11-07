@@ -24,6 +24,14 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     @Override
+    protected void onResume() {
+        binding.textView7.setText("TALLER#3");
+        binding.inputUsername.setText("");
+        binding.inputPassword.setText("");
+        super.onResume();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding=ActivityMainBinding.inflate(getLayoutInflater());
@@ -31,7 +39,17 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        Toast.makeText(this, "Hola Mundo", Toast.LENGTH_SHORT).show();
+        try {
+            int extras = getIntent().getFlags();
+            Integer ie= extras;
+            Log.i("FLAG_INTENT", ie.toString());
+            mAuth.signOut();
+
+        }catch (Exception e){}
+
+
+
+        Toast.makeText(this, "Bienvenid@", Toast.LENGTH_SHORT).show();
         Log.i("APP", "Done");
 
         binding.textView6.setOnClickListener(new View.OnClickListener() {
@@ -48,14 +66,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 binding.textView7.setText("TALLER#3");
-            }
-        });
-
-        binding.button4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /**VERIFICA USUARIO EN FIREBASE**/
-                binding.textView7.setText("Usuario o Contraseña \nINCORRECTOS");
             }
         });
 
@@ -80,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             binding.inputUsername.setText("");
             binding.inputPassword.setText("");
+            binding.textView7.setText("Usuario o Contraseña \nINCORRECTOS");
         }
     }
 
@@ -140,7 +151,4 @@ public class MainActivity extends AppCompatActivity {
             return false;
         return true;
     }
-
-
-
 }
