@@ -116,9 +116,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return valid;
     }
-    /*
-    CERRAR SESIOON.
-     */
 
 
     private void signInUser(String email, String password) {

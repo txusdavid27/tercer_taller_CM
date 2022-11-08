@@ -22,6 +22,8 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -43,10 +45,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 import org.json.JSONException;
 
@@ -60,6 +66,14 @@ import ponti.edu.trasla.databinding.ActivityMainBinding;
 import ponti.edu.trasla.databinding.ActivityRegistroBinding;
 
 public class RegistroActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback{
+
+    /*
+    AHORA TENEMOS QUE SALVAR LA INFO EN REGISTRO
+    Y VERIFICAR QUE TODOS LOS CAMPOS ESTÉN LLENOS.
+    LA CAMARA PUES GUARDAR LA URI DE DONDE QUEDÓ LA FOTO.
+    SI NO FUNCIONA PREGUNTARLE A DANIEL.
+     */
+
 
     /*Binding*/
     ActivityRegistroBinding binding;
@@ -95,6 +109,9 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
 
         binding.botonRegistrar.setEnabled(false);
 
+        /**
+         * Botones de Captura de Imágen.
+         */
         binding.btnImagen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,6 +132,9 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
             }
         });
 
+        /**
+         * Opciones de Localización.
+         */
         mLocationRequest = createLocationRequest();
         mLocationCallback = new LocationCallback(){
             @Override
@@ -130,6 +150,16 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
 
         solicitPermission(this, Manifest.permission.ACCESS_FINE_LOCATION, "Permission to Access Location", ACCESS_LOCATION_ID);
         usePermission();
+
+        /**
+         * Botón de Registro y proceso de validación.
+         */
+        binding.botonRegistrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                registerUser();
+            }
+        });
 
 
     }
@@ -184,6 +214,129 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
         }
     }
 
+
+    /**
+     * VALIDAR TODO CAMPO.
+     * @return
+     */
+    private boolean validateForm() {
+        boolean valid = true;
+        String email = binding.inputEmail.getText().toString();
+        if (TextUtils.isEmpty(email)) {
+            binding.inputEmail.setError("Required.");
+            valid = false;
+        } else {
+            if(isEmailValid(binding.inputEmail.getText().toString())){
+                binding.inputEmail.setError(null);
+            }else{
+                binding.inputEmail.setError("Dirección Erronea.");
+            }
+        }
+        String password = binding.inputPassword.getText().toString();
+        if (TextUtils.isEmpty(password)) {
+            binding.inputPassword.setError("Required.");
+            valid = false;
+        } else {
+            binding.inputPassword.setError(null);
+        }
+        String nombre = binding.inputNombre.getText().toString();
+        if (TextUtils.isEmpty(nombre)) {
+            binding.inputNombre.setError("Required.");
+            valid = false;
+        } else {
+            binding.inputNombre.setError(null);
+        }
+        String apellido = binding.inputApellido.getText().toString();
+        if (TextUtils.isEmpty(apellido)) {
+            binding.inputApellido.setError("Required.");
+            valid = false;
+        } else {
+            binding.inputApellido.setError(null);
+        }
+
+        String identificacion = binding.inputID.getText().toString();
+        if (TextUtils.isEmpty(identificacion)) {
+            binding.inputID.setError("Required.");
+            valid = false;
+        } else {
+            binding.inputID.setError(null);
+        }
+
+        return valid;
+    }
+
+
+    /**
+     * SOLO CORREO
+     * @param email
+     * @return
+     */
+    private boolean isEmailValid(String email) {
+        if (!email.contains("@") ||
+                !email.contains(".") ||
+                email.length() < 5)
+            return false;
+        return true;
+    }
+
+
+    private void registerUser() {
+        if (validateForm()) {
+            mAuth.createUserWithEmailAndPassword(binding.inputEmail.getText().toString(), binding.inputPassword.getText().toString())
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+// Sign in success, update UI
+                                Log.d("INFO", "Register:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
+
+                                if(user!=null){ //Update user Info
+                                    UserProfileChangeRequest.Builder upcrb = new UserProfileChangeRequest.Builder();
+                                    upcrb.setDisplayName(binding.inputNombre.getText().toString()+" "+binding.inputApellido.getText().toString());
+                                    upcrb.setPhotoUri(Uri.parse("path/to/pic"));//fake uri, use Firebase Storage
+                                    user.updateProfile(upcrb.build());
+                                    updateUI(user);
+                                }
+
+                                updateUI(user);
+                            } else {
+// If sign in fails, display a message to the user.
+                                Log.w("INFO", "signInWithEmail:failure", task.getException());
+                                Toast.makeText(RegistroActivity.this, "Register failed.",
+                                        Toast.LENGTH_SHORT).show();
+                                updateUI(null);
+                            }
+                        }
+                    });
+        }
+    }
+
+    private void updateUI(FirebaseUser currentUser){
+        if(currentUser!=null){
+            Intent intent = new Intent(getBaseContext(), GoogleMapsActivity.class);
+            intent.putExtra("user", currentUser.getEmail());
+            startActivity(intent);
+        } else {
+            binding.inputEmail.setText("");
+            binding.inputPassword.setText("");
+            binding.textView7.setText("Usuario o Contraseña \nINCORRECTOS");
+        }
+    }
+
+    private void activarBotonRegistro(){
+        if(accesoGPS){
+            binding.botonRegistrar.setEnabled(true);
+            binding.botonRegistrar.setTextColor(Color.parseColor("#000000"));
+        }else{
+            Toast.makeText(getApplicationContext(), "ACTIVAR UBICACIÓN PARA REGISTRO", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    /**
+     * CAPTURA DE IMAGEN EN GALERIA O CAMARA.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -193,15 +346,7 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
                     Bundle extras = data.getExtras();
                     Bitmap imageBitmap = (Bitmap) extras.get("data");
                     binding.ivCamara.setImageBitmap(imageBitmap);
-                    if(accesoGPS){
-                        binding.botonRegistrar.setEnabled(true);
-                        binding.botonRegistrar.setTextColor(Color.parseColor("#000000"));
-                        /*
-                        EVALUAR QUE TODOS LOS CAMPOS ESTÉN LLENOS.
-                         */
-                    }else{
-                        Toast.makeText(getApplicationContext(), "ACTIVAR UBICACIÓN PARA REGISTRO", Toast.LENGTH_LONG).show();
-                    }
+                    activarBotonRegistro();
                 }
                 break;
             }
@@ -212,12 +357,7 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
                         final InputStream is = getContentResolver().openInputStream(imageUri);
                         final Bitmap selected = BitmapFactory.decodeStream(is);
                         binding.ivCamara.setImageBitmap(selected);
-                        if(accesoGPS){
-                            binding.botonRegistrar.setEnabled(true);
-                            binding.botonRegistrar.setTextColor(Color.parseColor("#000000"));
-                        }else{
-                            Toast.makeText(getApplicationContext(), "ACTIVAR UBICACIÓN PARA REGISTRO", Toast.LENGTH_LONG).show();
-                        }
+                        activarBotonRegistro();
                     }catch(FileNotFoundException e){
                         e.printStackTrace();
                     }
