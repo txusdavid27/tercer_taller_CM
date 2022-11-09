@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -53,27 +54,27 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONException;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 import ponti.edu.trasla.databinding.ActivityMainBinding;
 import ponti.edu.trasla.databinding.ActivityRegistroBinding;
 
 public class RegistroActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback{
-
-    /*
-    AHORA TENEMOS QUE SALVAR LA INFO EN REGISTRO
-    Y VERIFICAR QUE TODOS LOS CAMPOS ESTÉN LLENOS.
-    LA CAMARA PUES GUARDAR LA URI DE DONDE QUEDÓ LA FOTO.
-    SI NO FUNCIONA PREGUNTARLE A DANIEL.
-     */
-
 
     /*Binding*/
     ActivityRegistroBinding binding;
@@ -87,7 +88,7 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
     private FusedLocationProviderClient mFusedLocationClient;
     private LatLng myLocation;
     private SensorManager sensorManager;
-    private Boolean accesoGPS=false;
+    private Boolean accesoGPS=true;
 
 
     /*FOTO DE PERFIL*/
@@ -97,17 +98,39 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
     String galPerm = Manifest.permission.READ_EXTERNAL_STORAGE;
     private static boolean accessCamera = false, accessGal = false;
 
+    /*FIREBASE VALUES*/
+    private DatabaseReference myRef;
+    private FirebaseDatabase database;
+    private Bitmap foto;
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
+    ////image path
+    private Uri filePath;
+    private static final String PATH_IMAGE = "images/";
+    //https://www.geeksforgeeks.org/android-how-to-upload-an-image-on-firebase-storage/
+
+    /**
+     * COPIAR TODA LA FUNCIÓN DE UPLOAD.
+     */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityRegistroBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        //////
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        mAuth = FirebaseAuth.getInstance();
-
+        //////
         binding.botonRegistrar.setEnabled(false);
+        //////
+        mAuth = FirebaseAuth.getInstance();
+        database= FirebaseDatabase.getInstance();
+        storage = FirebaseStorage.getInstance();
+        myRef= database.getReference();
+        storageReference = FirebaseStorage.getInstance().getReference();
+
+        ////
 
         /**
          * Botones de Captura de Imágen.
@@ -158,6 +181,8 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
             @Override
             public void onClick(View view) {
                 registerUser();
+                myRef=database.getReference("message");
+                myRef.setValue("Registro Completo.");
             }
         });
 
@@ -279,6 +304,9 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
         return true;
     }
 
+    public static final String PATH_USERS="users/";
+
+
 
     private void registerUser() {
         if (validateForm()) {
@@ -294,14 +322,40 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
                                 if(user!=null){ //Update user Info
                                     UserProfileChangeRequest.Builder upcrb = new UserProfileChangeRequest.Builder();
                                     upcrb.setDisplayName(binding.inputNombre.getText().toString()+" "+binding.inputApellido.getText().toString());
-                                    upcrb.setPhotoUri(Uri.parse("path/to/pic"));//fake uri, use Firebase Storage
                                     user.updateProfile(upcrb.build());
                                     updateUI(user);
-                                }
 
+                                    //ATRIBUTOS-EXTRA
+                                    MyUser myUser = new MyUser();
+                                    myUser.setNombre(binding.inputNombre.getText().toString());
+                                    myUser.setApellido(binding.inputApellido.getText().toString());
+                                    myUser.setId(Integer.parseInt(binding.inputID.getText().toString()));
+                                    myUser.setDisponible(true);
+                                    try{
+                                        myUser.setLatitud(myLocation.latitude);
+                                        myUser.setLongitud(myLocation.longitude);
+                                    }catch (Exception e){}
+                                    myRef=database.getReference(PATH_USERS+user.getUid());
+                                    myRef.setValue(myUser);
+                                    //Foto:
+
+                                    StorageReference imgRef = storageReference.child(PATH_IMAGE + user.getUid() + "/" + "profile.png");
+                                    imgRef.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
+                                        {
+                                            Toast.makeText(RegistroActivity.this, "Image Uploaded!!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e)
+                                        {
+                                            Toast.makeText(RegistroActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
                                 updateUI(user);
                             } else {
-// If sign in fails, display a message to the user.
                                 Log.w("INFO", "signInWithEmail:failure", task.getException());
                                 Toast.makeText(RegistroActivity.this, "Register failed.",
                                         Toast.LENGTH_SHORT).show();
@@ -310,6 +364,12 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
                         }
                     });
         }
+    }
+
+    private byte[] uploadImage(){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        foto.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        return baos.toByteArray();
     }
 
     private void updateUI(FirebaseUser currentUser){
@@ -344,7 +404,16 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
             case CAMERA_PERMISSION_ID: {
                 if(resultCode == RESULT_OK){
                     Bundle extras = data.getExtras();
+                    /**
+                     * IMPORTANTE: AQUÍ QUEDA LA IMAGEN.
+                     */
+                    filePath=data.getData();
                     Bitmap imageBitmap = (Bitmap) extras.get("data");
+                    /**
+                     * Éste valor Bitmap se guarda en firebase
+                     **/
+                    foto=imageBitmap;
+                    /****/
                     binding.ivCamara.setImageBitmap(imageBitmap);
                     activarBotonRegistro();
                 }
@@ -356,6 +425,15 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
                         final Uri imageUri = data.getData();
                         final InputStream is = getContentResolver().openInputStream(imageUri);
                         final Bitmap selected = BitmapFactory.decodeStream(is);
+                        /**
+                         * IMPORTANTE: AQUÍ QUEDA LA IMAGEN.
+                         */
+                        filePath=data.getData();
+                        /**
+                         * Éste valor Bitmap se guarda en firebase
+                         **/
+                        foto=selected;
+                        /***/
                         binding.ivCamara.setImageBitmap(selected);
                         activarBotonRegistro();
                     }catch(FileNotFoundException e){
@@ -458,9 +536,7 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
                         try{
                             ResolvableApiException resolvable = (ResolvableApiException) e;
                             resolvable.startResolutionForResult( RegistroActivity.this, REQUEST_CHECK_SETTINGS);
-                        }catch(IntentSender.SendIntentException sendEx)
-                        {
-                        }
+                        }catch(IntentSender.SendIntentException sendEx) {}
                         break;
                     }
 
@@ -484,5 +560,4 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
         super.onPause();
         stopLocationUpdates();
     }
-
 }

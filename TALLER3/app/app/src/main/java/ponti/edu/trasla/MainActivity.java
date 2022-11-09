@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
     private FirebaseAuth mAuth;
+    Bundle datos;
 
     @Override
     protected void onResume() {
@@ -40,11 +41,12 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         try {
-            int extras = getIntent().getFlags();
-            Integer ie= extras;
-            Log.i("FLAG_INTENT", ie.toString());
-            mAuth.signOut();
-
+            datos=getIntent().getExtras();
+            String obtenido= datos.getString("pasarFlag");
+            Log.i("FLAG_INTENT", obtenido);
+            if(Integer.parseInt(obtenido)==73){
+                mAuth.signOut();
+            }
         }catch (Exception e){}
 
 

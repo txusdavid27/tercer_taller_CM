@@ -41,9 +41,8 @@ public class GoogleMapsActivity extends AppCompatActivity implements OnMapReadyC
     public boolean onOptionsItemSelected(MenuItem item){
         int itemClicked = item.getItemId();
         if(itemClicked == R.id.menuLogOut){
-            mAuth.signOut();
             Intent intent = new Intent(GoogleMapsActivity.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("pasarFlag","73");
             startActivity(intent);
         }else if (itemClicked == R.id.menuState){
 //Abrir actividad para mostrarse activo etc.
