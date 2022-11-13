@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".HomeActivity">
+    <item
+        android:id="@+id/menuState"
+        android:title="Disponible"
+        app:actionViewClass="android.widget.Switch"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menuUsuarios"
+        android:icon="@drawable/dispo"
+        android:title="Listar Usuarios"
+        app:showAsAction="always"
+        />
+    <item
+        android:id="@+id/menuLogOut"
+        android:icon="@drawable/logout"
+        android:title="Log Out"
+        app:showAsAction="always" />
+</menu>

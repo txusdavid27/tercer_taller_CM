@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">trasla</string>
+    <string name="universidad_javeriana">Universidad Javeriana</string>
+    <string name="correo">Correo</string>
+    <string name="contrase_a">Contraseña</string>
+    <string name="taller_3">TALLER#3</string>
+    <string name="crea_una_cuenta">Crea una cuenta</string>
+    <string name="no_tienes_cuenta">No tienes cuenta?</string>
+    <string name="iniciar_sesi_n">INICIAR SESIÓN</string>
+    <string name="olvid_su_contrase_a">Olvidó su contraseña?</string>
+    <string name="nombre">Nombre</string>
+    <string name="apellido">Apellido</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="subir_imagen_perfil">Subir imagen Perfil</string>
+    <string name="registrar">Registrar</string>
+    <string name="registro_de_usuario">Registro de Usuario</string>
+    <string name="identificaci_n">Identificación</string>
+    <string name="camara">Camara</string>
+    <string name="galer_a">Galería</string>
+    <string name="title_activity_google_maps">GoogleMapsActivity</string>
+    <string name="menu_sesi_n">Menu Sesión</string>
+    <string name="mostrarse_activo">Mostrarse Activo</string>
+    <string name="mostrar_usuarios">Mostrar Usuarios</string>
+</resources>

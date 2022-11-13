@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backgroundregistro"
+
+    tools:context=".RegistroActivity">
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="295dp"
+        android:layout_height="35dp"
+        android:text="@string/registro_de_usuario"
+        android:textAlignment="center"
+        android:textColor="#4E4E4E"
+        android:textSize="24sp"
+        android:textStyle="normal|bold"
+        app:layout_constraintBottom_toTopOf="@+id/scrollable"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.407" />
+
+    <ScrollView
+        android:id="@+id/scrollable"
+        android:layout_width="330dp"
+        android:layout_height="582dp"
+        android:layout_marginTop="72dp"
+        android:padding="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/txtGPS"
+                android:layout_width="295dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="20dp"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="#4E4E4E"
+                android:textSize="15sp"
+                android:textStyle="normal|bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txtNombre"
+                android:layout_width="271dp"
+                android:layout_height="63dp"
+                android:layout_marginStart="70dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="70dp"
+                android:hint="@string/nombre"
+                android:textColorHint="#A7A7A7"
+                app:boxStrokeColor="#EAEAEE"
+                app:layout_constraintEnd_toEndOf="@id/txtGPS"
+                app:layout_constraintStart_toStartOf="@id/txtGPS"
+                app:layout_constraintTop_toTopOf="@id/txtGPS">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputNombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:inputType="textPersonName"
+                    android:textColor="#5B5B5B"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txtApellido"
+                android:layout_width="271dp"
+                android:layout_height="63dp"
+                android:layout_marginStart="70dp"
+                android:layout_marginTop="60dp"
+                android:layout_marginEnd="70dp"
+                android:hint="@string/apellido"
+                android:textColorHint="#A7A7A7"
+                app:boxStrokeColor="#EAEAEE"
+                app:layout_constraintEnd_toEndOf="@+id/txtNombre"
+                app:layout_constraintStart_toStartOf="@+id/txtNombre"
+                app:layout_constraintTop_toTopOf="@+id/txtNombre">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputApellido"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:inputType="textPersonName"
+                    android:textColor="#5B5B5B"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txtEmail"
+                android:layout_width="271dp"
+                android:layout_height="63dp"
+                android:layout_marginStart="70dp"
+                android:layout_marginTop="60dp"
+                android:layout_marginEnd="70dp"
+                android:hint="@string/email"
+                android:textColorHint="#A7A7A7"
+                app:boxStrokeColor="#EAEAEE"
+                app:layout_constraintEnd_toEndOf="@+id/txtApellido"
+                app:layout_constraintStart_toStartOf="@+id/txtApellido"
+                app:layout_constraintTop_toTopOf="@+id/txtApellido">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:inputType="textEmailAddress"
+                    android:textColor="#5B5B5B"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txtPassword"
+                android:layout_width="271dp"
+                android:layout_height="63dp"
+                android:layout_marginStart="70dp"
+                android:layout_marginTop="60dp"
+                android:layout_marginEnd="70dp"
+                android:hint="@string/password"
+                android:textColorHint="#A7A7A7"
+                app:boxStrokeColor="#EAEAEE"
+                app:layout_constraintEnd_toEndOf="@+id/txtEmail"
+                app:layout_constraintStart_toStartOf="@+id/txtEmail"
+                app:layout_constraintTop_toTopOf="@+id/txtEmail">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:inputType="textPassword"
+                    android:textColor="#5B5B5B"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txtID"
+                android:layout_width="271dp"
+                android:layout_height="63dp"
+                android:layout_marginStart="70dp"
+                android:layout_marginTop="60dp"
+                android:layout_marginEnd="70dp"
+                android:hint="@string/identificaci_n"
+                android:textColorHint="#A7A7A7"
+                app:boxStrokeColor="#EAEAEE"
+                app:layout_constraintEnd_toEndOf="@+id/txtPassword"
+                app:layout_constraintStart_toStartOf="@+id/txtPassword"
+                app:layout_constraintTop_toTopOf="@+id/txtPassword">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputID"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:inputType="number"
+                    android:textColor="#5B5B5B"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <TextView
+                android:id="@+id/txtFoto"
+                android:layout_width="295dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="70dp"
+                android:text="@string/subir_imagen_perfil"
+                android:textAlignment="center"
+                android:textColor="#4E4E4E"
+                android:textSize="15sp"
+                android:textStyle="normal|bold"
+                app:layout_constraintEnd_toEndOf="@+id/txtID"
+                app:layout_constraintStart_toStartOf="@+id/txtID"
+                app:layout_constraintTop_toTopOf="@+id/txtID" />
+
+
+            <Button
+                android:id="@+id/btnImagen"
+                android:layout_width="139dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="150dp"
+                android:layout_marginTop="35dp"
+                android:text="@string/galer_a"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="@+id/txtFoto"
+                app:layout_constraintStart_toStartOf="@+id/txtFoto"
+                app:layout_constraintTop_toTopOf="@+id/txtFoto" />
+
+            <Button
+                android:id="@+id/btnFoto"
+                android:layout_width="139dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="35dp"
+                android:layout_marginEnd="140dp"
+                android:layout_weight="0.5"
+                android:text="@string/camara"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="@+id/txtFoto"
+                app:layout_constraintStart_toStartOf="@+id/txtFoto"
+                app:layout_constraintTop_toTopOf="@+id/txtFoto" />
+
+            <ImageView
+                android:id="@+id/ivCamara"
+                android:layout_width="210dp"
+                android:layout_height="197dp"
+                android:layout_marginTop="10dp"
+                android:scaleType="fitCenter"
+                app:layout_constraintEnd_toEndOf="@+id/btnImagen"
+                app:layout_constraintHorizontal_bias="0.472"
+                app:layout_constraintStart_toStartOf="@+id/btnFoto"
+                app:layout_constraintTop_toBottomOf="@+id/btnFoto"
+                tools:srcCompat="@tools:sample/avatars" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/botonRegistrar"
+        android:layout_width="271dp"
+        android:layout_height="55dp"
+        android:layout_marginBottom="24dp"
+        android:text="@string/registrar"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/scrollable"
+        app:layout_constraintHorizontal_bias="0.508"
+        app:layout_constraintStart_toStartOf="@+id/scrollable"
+        app:layout_constraintTop_toBottomOf="@+id/scrollable"
+        app:layout_constraintVertical_bias="0.0" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
