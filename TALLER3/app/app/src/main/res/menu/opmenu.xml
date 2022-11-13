@@ -13,4 +13,10 @@
         android:title="@string/mostrarse_activo"
         app:showAsAction="always"
         />
+    <item
+        android:id="@+id/menuUsuarios"
+        android:icon="@drawable/dispo"
+        android:title="@string/mostrarse_activo"
+        app:showAsAction="always"
+        />
 </menu>

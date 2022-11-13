@@ -1,10 +1,11 @@
-package ponti.edu.trasla;
+package ponti.edu.trasla.model;
 
 import java.io.Serializable;
 
-public class MyUser implements Serializable {
+public class Usuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private String key;
     private String nombre;
     private String apellido;
     private Integer id;
@@ -12,7 +13,7 @@ public class MyUser implements Serializable {
     private Double longitud;
     private Boolean disponible;
 
-    public MyUser() {
+    public Usuario() {
     }
 
     public String getApellido() {
@@ -61,5 +62,13 @@ public class MyUser implements Serializable {
 
     public void setDisponible(Boolean disponible) {
         this.disponible = disponible;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

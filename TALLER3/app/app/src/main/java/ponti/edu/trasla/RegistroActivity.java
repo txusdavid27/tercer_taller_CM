@@ -8,17 +8,13 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.hardware.Sensor;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -40,12 +36,7 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -57,22 +48,15 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.json.JSONException;
-
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.UUID;
 
-import ponti.edu.trasla.databinding.ActivityMainBinding;
 import ponti.edu.trasla.databinding.ActivityRegistroBinding;
+import ponti.edu.trasla.model.Usuario;
 
 public class RegistroActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback{
 
@@ -326,7 +310,7 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
                                     updateUI(user);
 
                                     //ATRIBUTOS-EXTRA
-                                    MyUser myUser = new MyUser();
+                                    Usuario myUser = new Usuario();
                                     myUser.setNombre(binding.inputNombre.getText().toString());
                                     myUser.setApellido(binding.inputApellido.getText().toString());
                                     myUser.setId(Integer.parseInt(binding.inputID.getText().toString()));
@@ -340,7 +324,7 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
                                     //Foto:
 
                                     StorageReference imgRef = storageReference.child(PATH_IMAGE + user.getUid() + "/" + "profile.png");
-                                    imgRef.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    imgRef.putBytes(uploadImage()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                         @Override
                                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
                                         {
@@ -365,6 +349,7 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
                     });
         }
     }
+
 
     private byte[] uploadImage(){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -464,10 +449,6 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
 
     //Código vital:
 
-    /**
-     * Obtener Localización con Permiso.
-     * @return
-     */
     protected LocationRequest createLocationRequest(){
         LocationRequest request = new LocationRequest();
         request.setInterval(10000);
@@ -476,13 +457,6 @@ public class RegistroActivity extends AppCompatActivity implements ActivityCompa
         return request;
     }
 
-    /**
-     *
-     * @param context
-     * @param permit
-     * @param justification
-     * @param id
-     */
     private void solicitPermission(Activity context, String permit, String justification, int id) {
         if (ContextCompat.checkSelfPermission(context, permit) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(context, permit)) {
